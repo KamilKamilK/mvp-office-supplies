@@ -11,7 +11,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class AppFixtures extends Fixture
 {
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $colorRed = new Color('red', 'ff0000');
         $colorGreen = new Color('green', '00ff00');

@@ -4,33 +4,35 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Routing\Annotation\Route;
 
 class SecurityController extends AbstractController
 {
-    /**
-     * @Route("/login", name="app_login")
-     */
+    #[Route('/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        // if ($this->getUser()) {
-        //     return $this->redirectToRoute('target_path');
-        // }
+        // Jeśli użytkownik jest zalogowany, można przekierować np. na stronę główną
+        if ($this->getUser()) {
+            return $this->redirectToRoute('app_homepage');
+        }
 
-        // get the login error if there is one
+        // Błąd logowania (jeżeli wystąpił)
         $error = $authenticationUtils->getLastAuthenticationError();
-        // last username entered by the user
+
+        // Ostatnio wpisany login
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+        return $this->render('security/login.html.twig', [
+            'last_username' => $lastUsername,
+            'error' => $error,
+        ]);
     }
 
-    /**
-     * @Route("/logout", name="app_logout")
-     */
-    public function logout()
+    #[Route('/logout', name: 'app_logout')]
+    public function logout(): void
     {
-        throw new \Exception('This method can be blank - it will be intercepted by the logout key on your firewall');
+        // Metoda może być pusta - Symfony przejmie obsługę przez firewall
+        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 }

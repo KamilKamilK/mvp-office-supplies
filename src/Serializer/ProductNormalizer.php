@@ -27,7 +27,7 @@ class ProductNormalizer implements ContextAwareNormalizerInterface, CacheableSup
         return false;
     }
 
-    public function supportsNormalization($data, string $format = null, array $context = [])
+    public function supportsNormalization($data, string $format = null, array $context = []): bool
     {
         if (!$data instanceof Product) {
             return false;
