@@ -6,6 +6,7 @@
         "@babel/core": "^7.28.5",
         "@babel/preset-env": "^7.28.5",
         "@symfony/webpack-encore": "^5.2.0",
+        "@vue/compiler-sfc": "^3.5.22",
         "babel-loader": "^10.0.0",
         "bootstrap": "^5.3",
         "core-js": "^3.0.0",
@@ -17,6 +18,8 @@
         "regenerator-runtime": "^0.13.2",
         "sass": "^1.29.0",
         "sass-loader": "^16.0.1",
+        "vue": "^3.2.14",
+        "vue-loader": "^17.0.0",
         "webpack": "^5.88",
         "webpack-cli": "^5.1",
         "webpack-notifier": "^1.6.0"
