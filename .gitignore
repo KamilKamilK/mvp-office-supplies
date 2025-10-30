@@ -1,0 +1,65 @@
+# ------------------------
+# Symfony / PHP
+# ------------------------
+/vendor/
+/var/
+/.env
+.env.local
+.env.*.local
+/.phpunit.result.cache
+
+# Composer
+/composer.lock
+
+# ------------------------
+# Node / Frontend
+# ------------------------
+/node_modules/
+/yarn.lock
+/package-lock.json
+/public/build/
+/public/hot
+/public/bundles
+
+# ------------------------
+# Logs
+# ------------------------
+/*.log
+/logs/
+/*.log.*
+/var/log/
+
+# ------------------------
+# IDE / Editor
+# ------------------------
+.idea/
+/.vscode/
+/*.sublime-project
+/*.sublime-workspace
+*.swp
+*.swo
+*.DS_Store
+
+# ------------------------
+# Docker
+# ------------------------
+/docker-compose.override.yml
+/docker/.env
+/docker/data/
+docker-compose.override.yml
+
+# ------------------------
+# OS / System files
+# ------------------------
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+*.bak
+*.tmp
+
+# ------------------------
+# PHPUnit / Test artifacts
+# ------------------------
+/phpunit.xml
+/phpunit.xml.dist
