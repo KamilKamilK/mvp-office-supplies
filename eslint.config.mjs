@@ -17,8 +17,8 @@ export default [
             '**/*.gif',
             '**/*.png',
             '**/vendor/**',
-            '**/var/**'
-        ]
+            '**/var/**',
+        ],
     },
 
     // Podstawowa konfiguracja
@@ -30,11 +30,11 @@ export default [
     // Airbnb base config
     {
         plugins: {
-            import: importPlugin
+            import: importPlugin,
         },
         rules: {
-            ...airbnbBase.rules
-        }
+            ...airbnbBase.rules,
+        },
     },
 
     // Główna konfiguracja
@@ -46,7 +46,7 @@ export default [
                 ...globals.browser,
                 ...globals.node,
                 ...globals.es2021,
-            }
+            },
         },
         rules: {
             // Wyłącz/dostosuj surowe reguły Airbnb
@@ -56,10 +56,10 @@ export default [
             'import/extensions': 'off',
             'import/prefer-default-export': 'off',
             'vue/multi-word-component-names': 'off',
-            'indent': ['error', 4],
+            indent: ['error', 4],
             'max-len': ['error', { code: 120 }],
             'no-underscore-dangle': 'off',
-        }
+        },
     },
 
     // Specyficzne dla Vue
@@ -67,20 +67,23 @@ export default [
         files: ['**/*.vue'],
         rules: {
             'vue/html-indent': ['error', 2],
-            'vue/max-attributes-per-line': ['error', {
-                singleline: 3,
-                multiline: 1
-            }],
-        }
+            'vue/max-attributes-per-line': [
+                'error',
+                {
+                    singleline: 3,
+                    multiline: 1,
+                },
+            ],
+        },
     },
 
     {
         plugins: {
-            prettier: prettierPlugin
+            prettier: prettierPlugin,
         },
         rules: {
             ...prettierConfig.rules,
-            'prettier/prettier': 'warn'
-        }
-    }
+            'prettier/prettier': 'warn',
+        },
+    },
 ];

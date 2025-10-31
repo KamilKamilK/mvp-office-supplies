@@ -2,66 +2,25 @@
     <div class="container-fluid">
         <div class="row">
             <aside class="col-12 col-md-3">
-                <div :class="[$style.sidebar, 'p-3', 'mb-5']">
-                    <h5 class="text-center">Categories</h5>
-                    <ul class="nav flex-column mb-4">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/">All Products</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Category A</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Category B</a>
-                        </li>
-                    </ul>
-                </div>
+                <Sidebar />
             </aside>
 
             <div class="col-12 col-md-9">
-                <div class="row">
-                    <div class="col-12">
-                        <h1>Products</h1>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 col-md-6 mb-2 pb-2">TODO - load some products!</div>
-                </div>
-                <div class="row">
-                    <legend-component :title="legend" />
-                </div>
+                <Catalog />
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import LegendComponent from '../components/legend.vue';
+import Catalog from '@/components/catalog.vue';
+import Sidebar from '@/components/sidebar.vue';
 
 export default {
     name: 'Products',
     components: {
-        LegendComponent,
-    },
-    data() {
-        return {
-            legend: "Shipping takes 10-12 weeks, and products probably won't work",
-        };
+        Catalog,
+        Sidebar,
     },
 };
 </script>
-
-<style lang="scss" module>
-@use '../../scss/components/light-component' as *;
-@use '../../scss/variables/colors' as colors;
-
-.sidebar {
-    @include light-component;
-
-    ul {
-        li a:hover {
-            background: colors.$blue-component-link-hover;
-        }
-    }
-}
-</style>
