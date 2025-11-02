@@ -43,10 +43,10 @@ export default {
 
 <style lang="scss" module>
 @use 'styles/components/light-component' as *;
-@use 'styles/variables/colors' as colors;
+@use 'styles/variables/colors' as *;
 
 .product-box {
-    border: 1px solid colors.$light-component-border;
+    border: 1px solid $light-component-border;
     box-shadow: 0 0 7px 4px #efefee;
     border-radius: 5px;
 }

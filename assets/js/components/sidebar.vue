@@ -1,13 +1,28 @@
 <template>
-    <div :class="componentClass">
+    <div :class="[$style.component, 'p-3', 'mb-5']">
         <div v-show="!collapsed">
             <h5 class="text-center">Categories</h5>
             <ul class="nav flex-column mb-4">
                 <li class="nav-item">
-                    <a class="nav-link" href="/">All Products</a>
+                    <a
+                        :class="{
+                            'nav-link': true,
+                            selected: currentCategoryId === null,
+                        }"
+                        href="/"
+                    >
+                        All Products</a
+                    >
                 </li>
-                <li v-for="(category, index) in categories" :key="index" class="nav-item">
-                    <a :href="category.link" class="nav-link">
+                <li v-for="category in categories" :key="category['@id']" class="nav-item">
+                    <a
+                        :class="{
+                            'nav-link': true,
+                            selected: category['@id'] === currentCategoryId,
+                        }"
+                        :href="`/category/${category.id}`"
+                        class="nav-link"
+                    >
                         {{ category.name }}
                     </a>
                 </li>
@@ -26,6 +41,8 @@
     </div>
 </template>
 <script>
+import axios from 'axios';
+
 export default {
     name: 'Sidebar',
     props: {
@@ -37,40 +54,25 @@ export default {
     emits: ['toggle-collapsed'],
     data() {
         return {
-            categories: [
-                {
-                    name: 'Laser Printers',
-                    link: '#',
-                },
-                {
-                    name: 'PC drivers',
-                    link: '#',
-                },
-            ],
+            categories: [],
         };
     },
     computed: {
-        /**
-         * Computes the component classes depending on collapsed state
-         *
-         * @return string[]
-         */
-        componentClass() {
-            const classes = [this.$style.component, 'p-3', 'mb-5'];
-
-            if (this.collapsed) {
-                classes.push(this.$style.collapsed);
-            }
-
-            return classes;
+        currentCategoryId() {
+            return window.currentCategoryId;
         },
+    },
+    async created() {
+        const response = await axios.get('/api/categories');
+
+        this.categories = response.data['hydra:member'];
     },
 };
 </script>
 
 <style lang="scss" module>
 @use 'styles/components/light-component' as *;
-@use 'styles/variables/colors' as colors;
+@use 'styles/variables/colors' as *;
 
 .component {
     @include light-component;
@@ -80,8 +82,23 @@ export default {
     }
 
     ul {
-        li a:hover {
-            background: colors.$blue-component-link-hover;
+        li {
+            a {
+                display: block;
+                padding: 0.5rem 1rem;
+                text-decoration: none;
+                color: inherit;
+                border-radius: 4px;
+                transition: background 0.2s;
+
+                &:hover {
+                    background: $blue-component-link-hover;
+                }
+            }
+
+            :global(a.selected) {
+                background: $light-component-border;
+            }
         }
     }
 }
