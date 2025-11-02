@@ -1,23 +1,25 @@
 <template>
-    <div :class="[$style.sidebar, 'p-3', 'mb-5']" :style="{ width: collapsed ? '70px' : 'auto' }">
-        <h5 class="text-center">Categories</h5>
-        <ul class="nav flex-column mb-4">
-            <li class="nav-item">
-                <a class="nav-link" href="/">All Products</a>
-            </li>
-            <li v-for="(category, index) in categories" :key="index" class="nav-item">
-                <a :href="category.link" class="nav-link">
-                    {{ category.name }}
-                </a>
-            </li>
-        </ul>
+    <div :class="componentClass">
+        <div v-show="!collapsed">
+            <h5 class="text-center">Categories</h5>
+            <ul class="nav flex-column mb-4">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">All Products</a>
+                </li>
+                <li v-for="(category, index) in categories" :key="index" class="nav-item">
+                    <a :href="category.link" class="nav-link">
+                        {{ category.name }}
+                    </a>
+                </li>
+            </ul>
 
-        <hr />
+            <hr />
+        </div>
 
         <div class="d-flex justify-content-end">
             <button
                 class="btn btn-secondary btn-sm"
-                @click="toggleCollapsed"
+                @click="$emit('toggle-collapsed')"
                 v-text="collapsed ? '>>' : '<< Collapse'"
             ></button>
         </div>
@@ -26,9 +28,15 @@
 <script>
 export default {
     name: 'Sidebar',
+    props: {
+        collapsed: {
+            type: Boolean,
+            required: true,
+        },
+    },
+    emits: ['toggle-collapsed'],
     data() {
         return {
-            collapsed: false,
             categories: [
                 {
                     name: 'Laser Printers',
@@ -41,9 +49,20 @@ export default {
             ],
         };
     },
-    methods: {
-        toggleCollapsed() {
-            this.collapsed = !this.collapsed;
+    computed: {
+        /**
+         * Computes the component classes depending on collapsed state
+         *
+         * @return string[]
+         */
+        componentClass() {
+            const classes = [this.$style.component, 'p-3', 'mb-5'];
+
+            if (this.collapsed) {
+                classes.push(this.$style.collapsed);
+            }
+
+            return classes;
         },
     },
 };
@@ -53,8 +72,12 @@ export default {
 @use 'styles/components/light-component' as *;
 @use 'styles/variables/colors' as colors;
 
-.sidebar {
+.component {
     @include light-component;
+
+    &.collapsed {
+        width: 70px;
+    }
 
     ul {
         li a:hover {

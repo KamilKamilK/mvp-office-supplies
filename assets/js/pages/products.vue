@@ -2,11 +2,11 @@
     <div class="container-fluid">
         <div class="row">
             <aside class="col-12 col-md-3">
-                <Sidebar />
+                <sidebar :collapsed="sidebarCollapsed" @toggle-collapsed="toggleSidebarCollapsed" />
             </aside>
 
             <div class="col-12 col-md-9">
-                <Catalog />
+                <catalog />
             </div>
         </div>
     </div>
@@ -21,6 +21,16 @@ export default {
     components: {
         Catalog,
         Sidebar,
+    },
+    data() {
+        return {
+            sidebarCollapsed: false,
+        };
+    },
+    methods: {
+        toggleSidebarCollapsed() {
+            this.sidebarCollapsed = !this.sidebarCollapsed;
+        },
     },
 };
 </script>
