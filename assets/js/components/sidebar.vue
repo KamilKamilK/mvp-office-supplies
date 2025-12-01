@@ -50,17 +50,17 @@ export default {
             type: Boolean,
             required: true,
         },
+        currentCategoryId: {
+            type: String,
+            required: false,
+            default: null,
+        },
     },
     emits: ['toggle-collapsed'],
     data() {
         return {
             categories: [],
         };
-    },
-    computed: {
-        currentCategoryId() {
-            return window.currentCategoryId;
-        },
     },
     async created() {
         const response = await axios.get('/api/categories');

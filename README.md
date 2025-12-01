@@ -28,10 +28,9 @@ project-root/
 │  ├─ public/
 │  ├─ src/
 │  └─ ...
-├─ frontend/      # Vue.js frontend
+│  ├─ README.md
 ├─ docker/        # Dockerfiles and nginx configuration
-├─ docker-compose.yml
-└─ README.md
+│  ├─ docker-compose.yml
 ```
 
 ---

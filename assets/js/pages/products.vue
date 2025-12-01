@@ -2,11 +2,15 @@
     <div class="container-fluid">
         <div class="row">
             <aside :class="asideClass">
-                <sidebar :collapsed="sidebarCollapsed" @toggle-collapsed="toggleSidebarCollapsed" />
+                <sidebar
+                    :collapsed="sidebarCollapsed"
+                    :current-category-id="currentCategoryId"
+                    @toggle-collapsed="toggleSidebarCollapsed"
+                />
             </aside>
 
             <div :class="contentClass">
-                <catalog />
+                <catalog :current-category-id="currentCategoryId" />
             </div>
         </div>
     </div>
@@ -15,6 +19,7 @@
 <script>
 import Catalog from '@/components/catalog.vue';
 import Sidebar from '@/components/sidebar.vue';
+import { getCurrentCategoryId } from '../services/page-context';
 
 export default {
     name: 'Products',
@@ -33,6 +38,9 @@ export default {
         },
         contentClass() {
             return this.sidebarCollapsed ? 'col-12 col-md-11' : 'col-12 col-md-9';
+        },
+        currentCategoryId() {
+            return getCurrentCategoryId();
         },
     },
     methods: {
