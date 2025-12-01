@@ -2,6 +2,7 @@
     <div :class="[$style.component, 'p-3', 'mb-5']">
         <div v-show="!collapsed">
             <h5 class="text-center">Categories</h5>
+            <Loading v-show="loading" />
             <ul class="nav flex-column mb-4">
                 <li class="nav-item">
                     <a
@@ -41,10 +42,12 @@
     </div>
 </template>
 <script>
-import axios from 'axios';
+import Loading from '@/components/loading.vue';
+import { getCategories } from '../services/categories-service';
 
 export default {
     name: 'Sidebar',
+    components: { Loading },
     props: {
         collapsed: {
             type: Boolean,
@@ -62,8 +65,13 @@ export default {
             categories: [],
         };
     },
+    computed: {
+        loading() {
+            return this.categories.length === 0;
+        },
+    },
     async created() {
-        const response = await axios.get('/api/categories');
+        const response = await getCategories();
 
         this.categories = response.data['hydra:member'];
     },

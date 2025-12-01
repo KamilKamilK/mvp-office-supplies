@@ -2,7 +2,7 @@
     <div>
         <div class="row">
             <div class="col-12">
-                <h1>Products</h1>
+                <title-component />
             </div>
         </div>
         <ProductList :products="products" :loading="loading" />
@@ -13,13 +13,14 @@
 </template>
 
 <script>
+import { getProducts } from '../services/products-service';
 import LegendComponent from '@/components/legend.vue';
-import axios from 'axios';
 import ProductList from '@/components/product-list/index.vue';
+import TitleComponent from '@/components/title.vue';
 
 export default {
     name: 'Catalog',
-    components: { LegendComponent, ProductList },
+    components: { LegendComponent, ProductList, TitleComponent },
     props: {
         currentCategoryId: {
             type: String,
@@ -34,16 +35,11 @@ export default {
         };
     },
     async created() {
-        const params = {};
-        if (this.currentCategoryId) {
-            params.category = this.currentCategoryId;
-        }
-
         this.loading = true;
 
         let response;
         try {
-            response = await axios.get('/api/products', { params });
+            response = await getProducts(this.currentCategoryId);
 
             this.loading = false;
 

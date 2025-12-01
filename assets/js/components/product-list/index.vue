@@ -4,7 +4,7 @@
             <div class="mt-4">
                 <Loading v-show="loading"></Loading>
 
-                <h5 v-show="!loading && products.length === 0" class="text-center">No products found.</h5>
+                <h5 v-show="!loading && products.length === 0">No products found.</h5>
             </div>
         </div>
         <product-card
