@@ -1,6 +1,6 @@
 <template>
     <div :class="$style.component">
-        <h1>Products</h1>
+        <h1>{{ categoryName }}</h1>
     </div>
 </template>
 
@@ -15,6 +15,17 @@ export default {
         categories: {
             type: Array,
             required: true,
+        },
+    },
+    computed: {
+        categoryName() {
+            if (this.currentCategoryId === null) {
+                return 'All Products';
+            }
+
+            const category = this.categories.find(cat => cat['@id'] === this.currentCategoryId);
+
+            return category ? category.name : '';
         },
     },
 };

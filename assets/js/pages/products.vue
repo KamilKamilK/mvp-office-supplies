@@ -5,12 +5,13 @@
                 <sidebar
                     :collapsed="sidebarCollapsed"
                     :current-category-id="currentCategoryId"
+                    :categories="categories"
                     @toggle-collapsed="toggleSidebarCollapsed"
                 />
             </aside>
 
             <div :class="contentClass">
-                <catalog :current-category-id="currentCategoryId" />
+                <catalog :current-category-id="currentCategoryId" :categories="categories" />
             </div>
         </div>
     </div>
@@ -19,7 +20,8 @@
 <script>
 import Catalog from '@/components/catalog.vue';
 import Sidebar from '@/components/sidebar.vue';
-import { getCurrentCategoryId } from '../services/page-context';
+import { getCurrentCategoryId } from '@/services/page-context';
+import { getCategories } from '@/services/categories-service';
 
 export default {
     name: 'Products',
@@ -30,6 +32,8 @@ export default {
     data() {
         return {
             sidebarCollapsed: false,
+            categories: [],
+            currentCategoryId: getCurrentCategoryId(),
         };
     },
     computed: {
@@ -39,9 +43,11 @@ export default {
         contentClass() {
             return this.sidebarCollapsed ? 'col-12 col-md-11' : 'col-12 col-md-9';
         },
-        currentCategoryId() {
-            return getCurrentCategoryId();
-        },
+    },
+    async created() {
+        const response = await getCategories();
+
+        this.categories = response.data['hydra:member'];
     },
     methods: {
         toggleSidebarCollapsed() {

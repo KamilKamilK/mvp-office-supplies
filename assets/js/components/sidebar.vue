@@ -43,7 +43,6 @@
 </template>
 <script>
 import Loading from '@/components/loading.vue';
-import { getCategories } from '../services/categories-service';
 
 export default {
     name: 'Sidebar',
@@ -58,22 +57,17 @@ export default {
             required: false,
             default: null,
         },
+        categories: {
+            type: Array,
+            required: true,
+        },
     },
     emits: ['toggle-collapsed'],
-    data() {
-        return {
-            categories: [],
-        };
-    },
+
     computed: {
         loading() {
             return this.categories.length === 0;
         },
-    },
-    async created() {
-        const response = await getCategories();
-
-        this.categories = response.data['hydra:member'];
     },
 };
 </script>
