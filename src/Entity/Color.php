@@ -2,35 +2,25 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\ColorRepository")
- * @ApiResource(
- *     normalizationContext={"groups"={"color:read"}}
- * )
- */
+#[ORM\Entity(repositoryClass: "App\Repository\ColorRepository")]
+#[ApiResource(
+    normalizationContext: ["groups" => ["color:read"]]
+)]
 class Color
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id, ORM\GeneratedValue, ORM\Column(type: "integer")]
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=100)
-     * @Groups("color:read")
-     */
+    #[ORM\Column(type: "string", length: 100)]
+    #[Groups("color:read")]
     private $name;
 
-    /**
-     * @ORM\Column(type="string", length=6)
-     * @Groups("color:read")
-     */
+    #[ORM\Column(type: "string", length: 6)]
+    #[Groups("color:read")]
     private $hexColor;
 
     public function __construct(string $name, string $hexColor)

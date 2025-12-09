@@ -55,6 +55,17 @@
         </p>
 
         {% block javascripts %}
+        {% set cart = app.session.get('_cart_' ~ app.session.get('_cart_id')) %}
+
+            <script>
+                {% if cart %}
+                    window.cartUrl = '/api/carts/{{ cart.id }}';
+                    window.cartId = {{ cart.id }};
+                {% else %}
+                    window.cartUrl = null;
+                    window.cartId = null;
+                {% endif %}
+            </script>
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
     </body>

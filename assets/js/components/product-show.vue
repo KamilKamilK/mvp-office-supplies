@@ -32,6 +32,7 @@
 </template>
 <script>
 import { fetchOneProduct } from '@/services/products-service';
+import { fetchCart } from '@/services/cart-service';
 import formatPrice from '@/helpers/format-price';
 import ColorSelector from '@/components/color-selector.vue';
 import Loading from '@/components/loading.vue';
@@ -62,6 +63,10 @@ export default {
         },
     },
     async created() {
+        fetchCart().then(cart => {
+            this.cart = cart;
+        });
+
         try {
             this.product = (await fetchOneProduct(this.productId)).data;
         } finally {

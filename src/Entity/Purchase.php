@@ -2,88 +2,64 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\PurchaseRepository")
- * @ApiResource(
- *     normalizationContext={"groups"={"purchase:read"}},
- *     denormalizationContext={"groups"={"purchase:write"}}
- * )
- */
+#[ORM\Entity(repositoryClass: "App\Repository\PurchaseRepository")]
+#[ApiResource(
+    normalizationContext: ["groups" => ["purchase:read"]],
+    denormalizationContext: ["groups" => ["purchase:write"]]
+)]
 class Purchase
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id, ORM\GeneratedValue, ORM\Column(type: "integer")]
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({"purchase:read", "purchase:write"})
-     * @Assert\NotBlank(message="Please, enter your full name!")
-     */
+    #[ORM\Column(type: "string", length: 255)]
+    #[Groups(["purchase:read", "purchase:write"])]
+    #[Assert\NotBlank(message: "Please, enter your full name!")]
     private $customerName;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({"purchase:read", "purchase:write"})
-     * @Assert\NotBlank(message="Please, enter your email address!")
-     * @Assert\Email(message="Please, enter a valid email!")
-     */
+    #[ORM\Column(type: "string", length: 255)]
+    #[Groups(["purchase:read", "purchase:write"])]
+    #[Assert\NotBlank(message: "Please, enter your email address!")]
+    #[Assert\Email(message: "Please, enter a valid email!")]
     private $customerEmail;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({"purchase:read", "purchase:write"})
-     * @Assert\NotBlank(message="Please, enter your street address!")
-     */
+    #[ORM\Column(type: "string", length: 255)]
+    #[Groups(["purchase:read", "purchase:write"])]
+    #[Assert\NotBlank(message: "Please, enter your street address!")]
     private $customerAddress;
 
-    /**
-     * @ORM\Column(type="string", length=20, nullable=true)
-     * @Groups({"purchase:read", "purchase:write"})
-     * @Assert\NotBlank(message="Please, enter your ZIP code!")
-     */
+    #[ORM\Column(type: "string", length: 20, nullable: true)]
+    #[Groups(["purchase:read", "purchase:write"])]
+    #[Assert\NotBlank(message: "Please, enter your ZIP code!")]
     private $customerZip;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({"purchase:read", "purchase:write"})
-     * @Assert\NotBlank(message="Please, enter your City!")
-     */
+    #[ORM\Column(type: "string", length: 255)]
+    #[Groups(["purchase:read", "purchase:write"])]
+    #[Assert\NotBlank(message: "Please, enter your City!")]
     private $customerCity;
 
-    /**
-     * @ORM\Column(type="string", length=20, nullable=true)
-     * @Groups({"purchase:read", "purchase:write"})
-     * @Assert\NotBlank(message="Please, provide a phone number!")
-     */
+    #[ORM\Column(type: "string", length: 20, nullable: true)]
+    #[Groups(["purchase:read", "purchase:write"])]
+    #[Assert\NotBlank(message: "Please, provide a phone number!")]
     private $customerPhone;
 
-    /**
-     * @ORM\Column(type="boolean")
-     * @Groups({"purchase:read"})
-     */
+    #[ORM\Column(type: "boolean")]
+    #[Groups(["purchase:read"])]
     private $isShipped = false;
 
-    /**
-     * @ORM\Column(type="datetime")
-     * @Groups({"purchase:read"})
-     */
+    #[ORM\Column(type: "datetime")]
+    #[Groups(["purchase:read"])]
     private $createdAt;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\PurchaseItem", mappedBy="purchase", orphanRemoval=true, cascade={"persist"})
-     * @Groups({"purchase:read", "purchase:write"})
-     */
+    #[ORM\OneToMany(targetEntity: PurchaseItem::class, mappedBy: "purchase", orphanRemoval: true, cascade: ["persist"])]
+    #[Groups(["purchase:read", "purchase:write"])]
     private $purchaseItems;
 
     public function __construct()

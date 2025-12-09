@@ -2,50 +2,36 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\PurchaseItemRepository")
- * @ApiResource(
- *     normalizationContext={"groups"={"purchase_item:read"}},
- *     denormalizationContext={"groups"={"purchase_item:write"}}
- * )
- */
+#[ORM\Entity(repositoryClass: "App\Repository\PurchaseItemRepository")]
+#[ApiResource(
+    normalizationContext: ["groups" => ["purchase_item:read"]],
+    denormalizationContext: ["groups" => ["purchase_item:write"]]
+)]
 class PurchaseItem
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id, ORM\GeneratedValue, ORM\Column(type: "integer")]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Purchase", inversedBy="purchaseItems")
-     * @ORM\JoinColumn(nullable=false)
-     * @Groups({"purchase_item:read", "purchase_item:write"})
-     */
+    #[ORM\ManyToOne(targetEntity: Purchase::class, inversedBy: "purchaseItems")]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["purchase_item:read", "purchase_item:write"])]
     private $purchase;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Product")
-     * @ORM\JoinColumn(nullable=false)
-     * @Groups({"purchase_item:read", "purchase_item:write", "purchase:write"})
-     */
+    #[ORM\ManyToOne(targetEntity: Product::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["purchase_item:read", "purchase_item:write", "purchase:write"])]
     private $product;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Color")
-     * @Groups({"purchase_item:read", "purchase_item:write", "purchase:write"})
-     */
+    #[ORM\ManyToOne(targetEntity: Color::class)]
+    #[Groups(["purchase_item:read", "purchase_item:write", "purchase:write"])]
     private $color;
 
-    /**
-     * @ORM\Column(type="integer")
-     * @Groups({"purchase_item:read", "purchase_item:write", "purchase:write"})
-     */
+    #[ORM\Column(type: "integer")]
+    #[Groups(["purchase_item:read", "purchase_item:write", "purchase:write"])]
     private $quantity;
 
     public function getId(): ?int

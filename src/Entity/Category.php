@@ -2,37 +2,27 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\CategoryRepository")
- * @ApiResource(
- *     normalizationContext={"groups"={"category:read"}}
- * )
- */
+#[ORM\Entity(repositoryClass: "App\Repository\CategoryRepository")]
+#[ApiResource(
+    normalizationContext: ["groups" => ["category:read"]]
+)]
 class Category
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     * @Groups("category:read")
-     */
+    #[ORM\Id, ORM\GeneratedValue, ORM\Column(type: "integer")]
+    #[Groups("category:read")]
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=100)
-     * @Groups("category:read")
-     */
+    #[ORM\Column(type: "string", length: 100)]
+    #[Groups("category:read")]
     private $name;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Product", mappedBy="category")
-     */
+    #[ORM\OneToMany(targetEntity: Product::class, mappedBy: "category")]
     private $products;
 
     public function __construct()
@@ -79,7 +69,6 @@ class Category
     {
         if ($this->products->contains($product)) {
             $this->products->removeElement($product);
-            // set the owning side to null (unless already changed)
             if ($product->getCategory() === $this) {
                 $product->setCategory(null);
             }

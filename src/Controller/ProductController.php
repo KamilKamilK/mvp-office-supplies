@@ -2,10 +2,10 @@
 
 namespace App\Controller;
 
-use ApiPlatform\Api\IriConverterInterface;
 use App\Entity\Category;
 use App\Entity\Product;
 use App\Repository\CategoryRepository;
+use ApiPlatform\Metadata\IriConverterInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;

@@ -78,17 +78,16 @@ export default {
             let response;
             try {
                 response = await fetchProducts(this.currentCategoryId, this.searchTerm);
-
-                this.loading = false;
-
-                this.products = response.data['hydra:member'];
+                this.products = response.data.member || response.data['hydra:member'];
             } catch (error) {
-                this.loading = false;
+                this.products = [];
                 console.error('Error fetching products:', error);
                 return;
+            } finally {
+                this.loading = false;
             }
 
-            this.products = response.data['hydra:member'];
+            this.products = response.data.member || response.data['hydra:member'];
         },
     },
 };
