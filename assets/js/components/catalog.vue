@@ -2,7 +2,7 @@
     <div>
         <div class="row">
             <div class="col-3">
-                <title-component :current-category-id="currentCategoryId" :categories="categories" />
+                <title-component :text="categoryName" />
             </div>
 
             <div class="col-9">
@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { getProducts } from '../services/products-service';
+import { fetchProducts } from '../services/products-service';
 import LegendComponent from '@/components/legend.vue';
 import ProductList from '@/components/product-list/index.vue';
 import TitleComponent from '@/components/title.vue';
@@ -44,6 +44,17 @@ export default {
             searchTerm: '',
         };
     },
+    computed: {
+        categoryName() {
+            if (this.currentCategoryId === null) {
+                return 'All Products';
+            }
+
+            const category = this.categories.find(cat => cat['@id'] === this.currentCategoryId);
+
+            return category ? category.name : '';
+        },
+    },
     watch: {
         currentCategoryId() {
             this.loadProducts();
@@ -66,7 +77,7 @@ export default {
 
             let response;
             try {
-                response = await getProducts(this.currentCategoryId, this.searchTerm);
+                response = await fetchProducts(this.currentCategoryId, this.searchTerm);
 
                 this.loading = false;
 

@@ -21,11 +21,10 @@
             linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
-    pointer-events: none;  /* ← DODAJ TO! */
-    z-index: 0;  /* ← I TO! */
+    pointer-events: none;
+    z-index: 0;
   }
 
-  /* Upewnij się, że zawartość jest nad ramką */
   > * {
     position: relative;
     z-index: 1;

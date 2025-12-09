@@ -11,7 +11,7 @@
             </aside>
 
             <div :class="contentClass">
-                <catalog :current-category-id="currentCategoryId" :categories="categories" />
+                <component :is="currentComponent" v-bind="currentProps" />
             </div>
         </div>
     </div>
@@ -20,7 +20,8 @@
 <script>
 import Catalog from '@/components/catalog.vue';
 import Sidebar from '@/components/sidebar.vue';
-import { getCurrentCategoryId } from '@/services/page-context';
+import ProductShow from '../components/product-show.vue';
+import { getCurrentCategoryId, getCurrentProductId } from '@/services/page-context';
 import { getCategories } from '@/services/categories-service';
 
 export default {
@@ -28,6 +29,7 @@ export default {
     components: {
         Catalog,
         Sidebar,
+        ProductShow,
     },
     data() {
         return {
@@ -42,6 +44,22 @@ export default {
         },
         contentClass() {
             return this.sidebarCollapsed ? 'col-12 col-md-11' : 'col-12 col-md-9';
+        },
+        currentProductId() {
+            return getCurrentProductId();
+        },
+        currentComponent() {
+            return this.currentProductId !== null ? ProductShow : Catalog;
+        },
+        currentProps() {
+            return this.currentComponent === ProductShow
+                ? {
+                      productId: this.currentProductId,
+                  }
+                : {
+                      currentCategoryId: this.currentCategoryId,
+                      categories: this.categories,
+                  };
         },
     },
     async created() {

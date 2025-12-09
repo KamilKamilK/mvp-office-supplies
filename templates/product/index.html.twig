@@ -16,6 +16,12 @@
         window.currentCategoryId = null
         {% endif %}
 
+        {% if currentProductId is defined %}
+        window.currentProductId = '{{ currentProductId|e('js') }}'
+        {% else %}
+        window.currentProductId = null
+        {% endif %}
+
         window.categories = {{ categories|jsonld }};
     </script>
     {{ encore_entry_script_tags('products') }}
