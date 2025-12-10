@@ -24,7 +24,7 @@ export default {
         };
     },
     async created() {
-        this.colors = (await fetchColors()).data['hydra:member'];
+        this.colors = (await fetchColors()).data.member;
     },
     methods: {
         selectColor(iri) {

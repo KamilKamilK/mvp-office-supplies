@@ -20,12 +20,11 @@
                     </div>
                     <div class="col-8 p-3">
                         <div class="d-flex align-items-center justify-content-center">
-                            <color-selector v-if="product.colors.length !== 0" />
-                            <input class="form-control mx-3" type="number" min="1" />
-                            <button 
-                                class="btn btn-info btn-sm"
-                                :disabled="cart === null"
-                            >Add to Cart</button>
+                            <color-selector v-if="product.colors.length !== 0" :colors="product.colors" />
+                            <input v-model.number="quantity" class="form-control mx-3" type="number" min="1" />
+                            <button class="btn btn-info btn-sm" :disabled="cart === null" @click="addToCart">
+                                Add to Cart
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -35,7 +34,7 @@
 </template>
 <script>
 import { fetchOneProduct } from '@/services/products-service';
-import { fetchCart } from '@/services/cart-service';
+import { fetchCart, addItemToCart } from '@/services/cart-service';
 import formatPrice from '@/helpers/format-price';
 import ColorSelector from '@/components/color-selector.vue';
 import Loading from '@/components/loading.vue';
@@ -49,12 +48,18 @@ export default {
             type: String,
             required: true,
         },
+        colors: {
+            type: Array,
+            required: true,
+        },
     },
     data() {
         return {
             cart: null,
             product: null,
             loading: true,
+            selectedColor: null,
+            quantity: 1,
         };
     },
     computed: {
@@ -66,17 +71,30 @@ export default {
             return formatPrice(this.product.price);
         },
     },
+
     async created() {
         this.loading = true;
-        fetchCart().then(cart => {
-            this.cart = cart;
+
+        fetchCart().then(cartData => {
+            this.cart = cartData;
         });
+        console.log('Cart loaded', this.cart);
+
 
         try {
             this.product = (await fetchOneProduct(this.productId)).data;
         } finally {
             this.loading = false;
         }
+    },
+    methods: {
+        async addToCart() {
+            addItemToCart(this.cart, {
+                product: this.product['@id'],
+                color: this.selectedColor,
+                quantity: 1,
+            });
+        },
     },
 };
 </script>
