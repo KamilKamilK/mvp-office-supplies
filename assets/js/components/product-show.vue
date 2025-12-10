@@ -73,10 +73,7 @@ export default {
         });
 
         try {
-            console.log('Fetching product with ID:', this.productId);
             this.product = (await fetchOneProduct(this.productId)).data;
-            console.log('Product :', this.product);
-
         } finally {
             this.loading = false;
         }
