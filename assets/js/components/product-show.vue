@@ -77,13 +77,16 @@ export default {
 </script>
 
 <style lang="scss" module>
-@import '~styles/components/light-component';
+@use '~styles/components/light-component' as lc;
+
 .product {
-    @include light-component;
+    @include lc.light-component;
+
     img {
         max-width: 100%;
         max-height: 100%;
     }
+
     input {
         width: 60px;
     }

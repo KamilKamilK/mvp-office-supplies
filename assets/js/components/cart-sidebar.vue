@@ -34,14 +34,18 @@ export default {
 </script>
 
 <style lang="scss" module>
-@import '~styles/components/light-component.scss';
+@use '~styles/components/light-component' as lc;
 
-.component :global {
-    @include light-component;
+.product {
+    @include lc.light-component;
 
     img {
         max-width: 100%;
         max-height: 100%;
+    }
+
+    input {
+        width: 60px;
     }
 }
 </style>
