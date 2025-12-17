@@ -13,6 +13,16 @@ import axios from 'axios';
  */
 
 /**
+ * Konfiguracja axios dla API Platform
+ */
+const apiConfig = {
+    headers: {
+        'Content-Type': 'application/ld+json',
+        'Accept': 'application/ld+json',
+    },
+};
+
+/**
  * Gets the Cart IRI or null if there is none
  *
  * @return {string|null}
@@ -52,7 +62,7 @@ export async function fetchCart() {
         });
     }
 
-    const response = await axios.get(cartIri);
+    const response = await axios.get(cartIri, apiConfig);
 
     return { items: response.data.items };
 }
@@ -76,9 +86,9 @@ export async function addItemToCart(cart, item) {
 
     let response = null;
     if (cartIri !== null) {
-        response = await axios.put(cartIri, cart);
+        response = await axios.put(cartIri, cart, apiConfig);
     } else {
-        response = await axios.post('/api/carts', cart);
+        response = await axios.post('/api/carts', cart, apiConfig);
         setCartIri(response.data['@id']);
     }
 
@@ -96,7 +106,7 @@ export async function addItemToCart(cart, item) {
 export async function removeItemFromCart(cart, productId, colorId) {
     cart.items = cart.items.filter(item => !(item.product === productId && item.color === colorId));
 
-    const response = await axios.put(getCartIri(), cart);
+    const response = await axios.put(getCartIri(), cart, apiConfig);
 
     return { items: response.data.items };
 }
@@ -119,7 +129,7 @@ export async function updateCartItemQuantity(cart, productId, colorId, quantity)
 
     cart.items[cartItemIndex].quantity = quantity;
 
-    const response = await axios.put(getCartIri(), cart);
+    const response = await axios.put(getCartIri(), cart, apiConfig);
 
     return { items: response.data.items };
 }
@@ -130,7 +140,7 @@ export async function updateCartItemQuantity(cart, productId, colorId, quantity)
  * @return {Promise}
  */
 export function clearCart() {
-    return axios.delete(getCartIri());
+    return axios.delete(getCartIri(), apiConfig);
 }
 
 /**

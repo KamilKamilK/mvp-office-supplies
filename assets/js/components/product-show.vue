@@ -20,10 +20,18 @@
                     </div>
                     <div class="col-8 p-3">
                         <div class="d-flex align-items-center justify-content-center">
-                            <color-selector v-if="product.colors.length !== 0" :colors="product.colors" />
+                            <color-selector
+                                v-if="product.colors.length !== 0"
+                                :colors="product.colors"
+                                @color-selected="onColorSelected"
+                            />
                             <input v-model.number="quantity" class="form-control mx-3" type="number" min="1" />
-                            <button class="btn btn-info btn-sm" :disabled="cart === null" @click="addToCart">
-                                Add to Cart
+                            <button
+                                class="btn btn-info btn-sm"
+                                :disabled="cart === null || isAddingToCart"
+                                @click="addToCart"
+                            >
+                                {{ isAddingToCart ? 'Adding...' : 'Add to Cart' }}
                             </button>
                         </div>
                     </div>
@@ -32,6 +40,7 @@
         </div>
     </div>
 </template>
+
 <script>
 import { fetchOneProduct } from '@/services/products-service';
 import { fetchCart, addItemToCart } from '@/services/cart-service';
@@ -48,10 +57,6 @@ export default {
             type: String,
             required: true,
         },
-        colors: {
-            type: Array,
-            required: true,
-        },
     },
     data() {
         return {
@@ -60,6 +65,7 @@ export default {
             loading: true,
             selectedColor: null,
             quantity: 1,
+            isAddingToCart: false,
         };
     },
     computed: {
@@ -75,25 +81,67 @@ export default {
     async created() {
         this.loading = true;
 
-        fetchCart().then(cartData => {
-            this.cart = cartData;
-        });
-        console.log('Cart loaded', this.cart);
-
-
         try {
-            this.product = (await fetchOneProduct(this.productId)).data;
+            // Załaduj koszyk i produkt równolegle
+            const [cart, productResponse] = await Promise.all([fetchCart(), fetchOneProduct(this.productId)]);
+
+            this.cart = cart;
+            this.product = productResponse.data;
+
+            console.log('Cart loaded', this.cart);
+        } catch (error) {
+            console.error('Error loading data:', error);
         } finally {
             this.loading = false;
         }
     },
     methods: {
+        /**
+         * Handle color selection from color-selector component
+         */
+        onColorSelected(color) {
+            this.selectedColor = color;
+        },
+
         async addToCart() {
-            addItemToCart(this.cart, {
-                product: this.product['@id'],
-                color: this.selectedColor,
-                quantity: 1,
-            });
+            // Walidacja: sprawdź czy kolor jest wybrany (jeśli produkt ma kolory)
+            if (this.product.colors.length > 0 && !this.selectedColor) {
+                alert('Please select a color');
+                return;
+            }
+
+            this.isAddingToCart = true;
+
+            try {
+                // Debug: sprawdź co wysyłamy
+                console.log('Adding to cart:', {
+                    product: this.product['@id'],
+                    color: this.selectedColor,
+                    quantity: this.quantity,
+                });
+
+                const updatedCart = await addItemToCart(this.cart, {
+                    product: this.product['@id'],
+                    color: this.selectedColor,
+                    quantity: this.quantity,
+                });
+
+                // Zaktualizuj lokalny stan koszyka
+                this.cart = updatedCart;
+
+                // Opcjonalnie: wyświetl komunikat sukcesu
+                console.log('Item added to cart successfully');
+                alert('Product added to cart!');
+
+                // Opcjonalnie: zresetuj ilość do 1
+                this.quantity = 1;
+            } catch (error) {
+                console.error('Error adding item to cart:', error);
+                console.error('Error details:', error.response?.data);
+                alert('Failed to add item to cart. Please try again.');
+            } finally {
+                this.isAddingToCart = false;
+            }
         },
     },
 };

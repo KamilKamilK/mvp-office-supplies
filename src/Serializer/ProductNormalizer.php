@@ -49,9 +49,16 @@ class ProductNormalizer implements ContextAwareNormalizerInterface, CacheableSup
         $context[self::ALREADY_CALLED] = true;
         $data = $this->normalizer->normalize($object, $format, $context);
 
-        // add a fake image field
-        $data['image'] = $this->assetPackages
-            ->getUrl('uploads/products/'.$object->getImageFilename());
+        // Jeśli $data jest stringiem (IRI), po prostu zwróć go
+        if (is_string($data)) {
+            return $data;
+        }
+
+        // Jeśli $data jest tablicą, dodaj pole image
+        if (is_array($data)) {
+            $data['image'] = $this->assetPackages
+                ->getUrl('uploads/products/'.$object->getImageFilename());
+        }
 
         return $data;
     }
