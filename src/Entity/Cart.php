@@ -39,9 +39,6 @@ class Cart
     #[Groups(['cart:read'])]
     private string $id;
 
-    /**
-     * @var CartItem[]
-     */
     #[Groups(['cart:read', 'cart:write'])]
     private array $items = [];
 
@@ -55,9 +52,6 @@ class Cart
         return $this->id;
     }
 
-    /**
-     * @return CartItem[]|array
-     */
     public function getItems(): array
     {
         return $this->items;

@@ -151,9 +151,6 @@ class Product
         return $this;
     }
 
-    /**
-     * @return Collection|Color[]
-     */
     public function getColors(): Collection
     {
         return $this->colors;

@@ -21,9 +21,6 @@ class CartDataPersister implements ProcessorInterface
         return $this->requestStack->getSession();
     }
 
-    /**
-     * @param Cart $cart
-     */
     public function persist($cart)
     {
         $this->getSession()->set(self::getKey($cart->getId()), $cart);
@@ -41,9 +38,6 @@ class CartDataPersister implements ProcessorInterface
         return $data;
     }
 
-    /**
-     * @param Cart $cart
-     */
     public function remove($cart)
     {
         $this->getSession()->remove(self::getKey($cart->getId()));

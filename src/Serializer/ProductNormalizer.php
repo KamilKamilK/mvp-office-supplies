@@ -41,9 +41,6 @@ class ProductNormalizer implements ContextAwareNormalizerInterface, CacheableSup
         return true;
     }
 
-    /**
-     * @param Product $object
-     */
     public function normalize($object, string $format = null, array $context = [])
     {
         $context[self::ALREADY_CALLED] = true;

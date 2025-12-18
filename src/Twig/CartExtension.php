@@ -39,7 +39,6 @@ class CartExtension extends AbstractExtension
             return 0;
         }
 
-        /** @var Cart $cart */
         $cart = $session->get($key);
 
         return array_reduce($cart->getItems(), function($accumulator, CartItem $item) {

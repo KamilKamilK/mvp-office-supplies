@@ -1,11 +1,15 @@
 doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
-        # server_version: '5.7'
+
     orm:
         auto_generate_proxy_classes: true
         naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+        # Automatyczne mapowanie encji dla całej aplikacji
         auto_mapping: true
+        # Automatyczne mapowanie encji dla kontrolerów (Symfony 6.4+ deprecation)
+        controller_resolver:
+            auto_mapping: true
         mappings:
             App:
                 is_bundle: false
@@ -13,3 +17,4 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Entity'
                 prefix: 'App\Entity'
                 alias: App
+                

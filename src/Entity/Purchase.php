@@ -169,9 +169,6 @@ class Purchase
         return $this;
     }
 
-    /**
-     * @return Collection|PurchaseItem[]
-     */
     public function getPurchaseItems(): Collection
     {
         return $this->purchaseItems;
