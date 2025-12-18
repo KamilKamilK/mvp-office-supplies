@@ -18,7 +18,7 @@ import axios from 'axios';
 const apiConfig = {
     headers: {
         'Content-Type': 'application/ld+json',
-        'Accept': 'application/ld+json',
+        Accept: 'application/ld+json',
     },
 };
 

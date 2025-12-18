@@ -8,17 +8,29 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\ApiProperty;
+use App\ApiPlatform\CartDataPersister;
+use App\ApiPlatform\CartDataProvider;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(
     normalizationContext: ['groups' => ['cart:read']],
     denormalizationContext: ['groups' => ['cart:write']],
-    operations: [
-        new Get(),
-        new Put(),
-        new Delete(),
-        new Post(),
+        operations: [
+        new Get(
+            provider: CartDataProvider::class
+        ),
+        new Put(
+            provider: CartDataProvider::class,
+            processor: CartDataPersister::class
+        ),
+        new Delete(
+            provider: CartDataProvider::class,
+            processor: CartDataPersister::class
+        ),
+        new Post(
+            processor: CartDataPersister::class
+        ),
     ]
 )]
 class Cart

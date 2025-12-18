@@ -12,7 +12,7 @@ axios.interceptors.request.use(config => {
     // Jeśli request idzie do /api/, ustaw odpowiednie headery
     if (config.url && config.url.startsWith('/api/')) {
         config.headers['Content-Type'] = 'application/ld+json';
-        config.headers['Accept'] = 'application/ld+json';
+        config.headers.Accept = 'application/ld+json';
     }
     return config;
 });

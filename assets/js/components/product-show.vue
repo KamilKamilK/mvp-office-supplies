@@ -24,6 +24,8 @@
                             <input v-model.number="quantity" class="form-control mx-3" type="number" min="1" />
                             <button class="btn btn-info btn-sm" :disabled="cart === null" @click="addToCart">
                                 Add to Cart
+                                <i v-show="addToCartLoading" class="fas fa-spinner fa-spin"></i>
+                                <i v-show="addToCartSuccess" class="fas fa-check"></i>
                             </button>
                         </div>
                     </div>
@@ -52,9 +54,10 @@ export default {
     data() {
         return {
             cart: null,
+            addToCartLoading: false,
+            addToCartSuccess: false,
             product: null,
             loading: true,
-            selectedColor: null,
             quantity: 1,
         };
     },
@@ -75,8 +78,6 @@ export default {
         fetchCart().then(cart => {
             this.cart = cart;
         });
-        console.log('Cart loaded', this.cart);
-
 
         try {
             this.product = (await fetchOneProduct(this.productId)).data;
@@ -86,11 +87,16 @@ export default {
     },
     methods: {
         async addToCart() {
-            addItemToCart(this.cart, {
+            this.addToCartLoading = true;
+            this.addToCartSuccess = false;
+            await addItemToCart(this.cart, {
                 product: this.product['@id'],
-                color: this.selectedColor,
+                color: null,
                 quantity: 1,
             });
+
+            this.addToCartLoading = false;
+            this.addToCartSuccess = true;
         },
     },
 };
