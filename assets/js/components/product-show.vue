@@ -20,7 +20,10 @@
                     </div>
                     <div class="col-8 p-3">
                         <div class="d-flex align-items-center justify-content-center">
-                            <color-selector v-if="product.colors.length !== 0" :colors="product.colors" />
+                            <color-selector
+                                v-if="product.colors.length !== 0"
+                                @color-selected="updateSelectedColor"
+                            />
                             <input v-model.number="quantity" class="form-control mx-3" type="number" min="1" />
                             <button 
                                 class="btn btn-info btn-sm" 
@@ -44,7 +47,7 @@
 </template>
 <script>
 import { fetchOneProduct } from '@/services/products-service';
-import { fetchCart, addItemToCart } from '@/services/cart-service';
+import { fetchCart, addItemToCart, getCartTotalItems } from '@/services/cart-service';
 import formatPrice from '@/helpers/format-price';
 import ColorSelector from '@/components/color-selector.vue';
 import Loading from '@/components/loading.vue';
@@ -67,6 +70,7 @@ export default {
             product: null,
             loading: true,
             quantity: 1,
+            selectedColorId: null,
         };
     },
     computed: {
@@ -94,6 +98,11 @@ export default {
     },
     methods: {
         async addToCart() {
+            if (!this.selectedColorId && this.product.colors.length > 0) {
+                alert('Please select a color before adding to cart.');
+                return;
+            }
+
             this.addToCartLoading = true;
             this.addToCartSuccess = false;
 
@@ -101,7 +110,7 @@ export default {
                 const [result] = await Promise.all([
                     addItemToCart(this.cart, {
                         product: this.product['@id'],
-                        color: null,
+                        color: this.selectedColorId,
                         quantity: this.quantity,
                     }),
                     new Promise(resolve => setTimeout(resolve, 300)),
@@ -117,6 +126,13 @@ export default {
                 this.addToCartLoading = false;
                 console.error('Error adding to cart:', error);
             }
+
+            document.getElementById('js-shopping-cart-items')
+            .innerHTML = getCartTotalItems(this.cart).toString();
+        },
+
+        updateSelectedColor(colorIri) {
+            this.selectedColorId = colorIri;
         },
     },
 };

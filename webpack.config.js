@@ -9,6 +9,7 @@ Encore.setOutputPath('public/build/')
     .setPublicPath('/build')
     .addEntry('app', './assets/js/app.js')
     .addEntry('products', './assets/js/products.js')
+    .addEntry('shopping-cart', './assets/js/shopping-cart.js')
 
     .splitEntryChunks()
     .enableSingleRuntimeChunk()
