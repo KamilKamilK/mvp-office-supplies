@@ -22,10 +22,18 @@
                         <div class="d-flex align-items-center justify-content-center">
                             <color-selector v-if="product.colors.length !== 0" :colors="product.colors" />
                             <input v-model.number="quantity" class="form-control mx-3" type="number" min="1" />
-                            <button class="btn btn-info btn-sm" :disabled="cart === null" @click="addToCart">
-                                Add to Cart
-                                <i v-show="addToCartLoading" class="fas fa-spinner fa-spin"></i>
-                                <i v-show="addToCartSuccess" class="fas fa-check"></i>
+                            <button 
+                                class="btn btn-info btn-sm" 
+                                :disabled="cart === null || addToCartLoading" 
+                                @click="addToCart"
+                            >
+                                <span v-show="!addToCartLoading && !addToCartSuccess">Add to Cart</span>
+                                <span v-show="addToCartLoading">
+                                    <i class="fas fa-spinner fa-spin"></i> Adding...
+                                </span>
+                                <span v-show="addToCartSuccess">
+                                    <i class="fas fa-check"></i> Added!
+                                </span>
                             </button>
                         </div>
                     </div>
@@ -74,7 +82,6 @@ export default {
     async created() {
         this.loading = true;
 
-        // console.log(cart);
         fetchCart().then(cart => {
             this.cart = cart;
         });
@@ -89,14 +96,27 @@ export default {
         async addToCart() {
             this.addToCartLoading = true;
             this.addToCartSuccess = false;
-            await addItemToCart(this.cart, {
-                product: this.product['@id'],
-                color: null,
-                quantity: 1,
-            });
 
-            this.addToCartLoading = false;
-            this.addToCartSuccess = true;
+            try {
+                const [result] = await Promise.all([
+                    addItemToCart(this.cart, {
+                        product: this.product['@id'],
+                        color: null,
+                        quantity: this.quantity,
+                    }),
+                    new Promise(resolve => setTimeout(resolve, 300)),
+                ]);
+
+                this.addToCartLoading = false;
+                this.addToCartSuccess = true;
+
+                setTimeout(() => {
+                    this.addToCartSuccess = false;
+                }, 2000);
+            } catch (error) {
+                this.addToCartLoading = false;
+                console.error('Error adding to cart:', error);
+            }
         },
     },
 };
