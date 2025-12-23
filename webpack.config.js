@@ -40,33 +40,17 @@ Encore.setOutputPath('public/build/')
         definitions.__VUE_PROD_HYDRATION_MISMATCH_DETAILS__ = false;
     })
 
+    // Konfiguracja CSS Modules - czysta metoda Encore
+    .configureCssLoader(config => {
+        if (config.modules) {
+            config.modules.namedExport = false;
+            config.modules.exportOnlyLocals = false;
+        }
+    })
+
     .addAliases({
         '@': path.resolve(__dirname, 'assets'),
         styles: path.resolve(__dirname, 'assets', 'scss'),
     });
 
-const webpackConfig = Encore.getWebpackConfig();
-
-// Ręczna konfiguracja CSS Modules dla Vue 3
-webpackConfig.module.rules.forEach(rule => {
-    if (rule.oneOf) {
-        rule.oneOf.forEach(oneOfRule => {
-            if (oneOfRule.use) {
-                oneOfRule.use.forEach(loader => {
-                    if (loader.loader && loader.loader.includes('css-loader')) {
-                        if (loader.options && loader.options.modules) {
-                            loader.options.modules.namedExport = false;
-                            loader.options.modules.exportOnlyLocals = false;
-                        }
-                    }
-                });
-            }
-        });
-    }
-});
-
-if (!Encore.isProduction()) {
-    Encore.disableCssExtraction();
-}
-
-module.exports = webpackConfig;
+module.exports = Encore.getWebpackConfig();
