@@ -10,7 +10,7 @@ export default {
 
 <style lang="scss" module>
 .component {
-    background: url('../../images/loading.gif') no-repeat left center;
+    background: url('../images/loading.gif') no-repeat left center;
     padding-left: 60px;
     height: 50px;
     line-height: 50px;

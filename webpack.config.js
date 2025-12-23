@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const Encore = require('@symfony/webpack-encore');
 const path = require('path');
 
@@ -7,9 +8,9 @@ if (!Encore.isRuntimeEnvironmentConfigured()) {
 
 Encore.setOutputPath('public/build/')
     .setPublicPath('/build')
-    .addEntry('app', './assets/js/app.js')
-    .addEntry('products', './assets/js/products.js')
-    .addEntry('shopping-cart', './assets/js/shopping-cart.js')
+    .addEntry('app', './assets/app.js')
+    .addEntry('products', './assets/products.js')
+    .addEntry('shopping-cart', './assets/shopping-cart.js')
 
     .splitEntryChunks()
     .enableSingleRuntimeChunk()
@@ -40,7 +41,7 @@ Encore.setOutputPath('public/build/')
     })
 
     .addAliases({
-        '@': path.resolve(__dirname, 'assets', 'js'),
+        '@': path.resolve(__dirname, 'assets'),
         styles: path.resolve(__dirname, 'assets', 'scss'),
     });
 

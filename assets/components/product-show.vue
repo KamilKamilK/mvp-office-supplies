@@ -20,23 +20,18 @@
                     </div>
                     <div class="col-8 p-3">
                         <div class="d-flex align-items-center justify-content-center">
-                            <color-selector
-                                v-if="product.colors.length !== 0"
-                                @color-selected="updateSelectedColor"
-                            />
+                            <color-selector v-if="product.colors.length !== 0" @color-selected="updateSelectedColor" />
                             <input v-model.number="quantity" class="form-control mx-3" type="number" min="1" />
-                            <button 
-                                class="btn btn-info btn-sm" 
-                                :disabled="cart === null || addToCartLoading" 
+                            <button
+                                class="btn btn-info btn-sm"
+                                :disabled="cart === null || addToCartLoading"
                                 @click="addToCart"
                             >
                                 <span v-show="!addToCartLoading && !addToCartSuccess">Add to Cart</span>
                                 <span v-show="addToCartLoading">
                                     <i class="fas fa-spinner fa-spin"></i> Adding...
                                 </span>
-                                <span v-show="addToCartSuccess">
-                                    <i class="fas fa-check"></i> Added!
-                                </span>
+                                <span v-show="addToCartSuccess"> <i class="fas fa-check"></i> Added! </span>
                             </button>
                         </div>
                     </div>
@@ -99,7 +94,7 @@ export default {
     methods: {
         async addToCart() {
             if (!this.selectedColorId && this.product.colors.length > 0) {
-                alert('Please select a color before adding to cart.');
+                console.warn('Please select a color before adding to cart.');
                 return;
             }
 
@@ -113,11 +108,15 @@ export default {
                         color: this.selectedColorId,
                         quantity: this.quantity,
                     }),
-                    new Promise(resolve => setTimeout(resolve, 300)),
+                    // new Promise(resolve => setTimeout(resolve, 300)),
                 ]);
+
+                this.cart = result;
 
                 this.addToCartLoading = false;
                 this.addToCartSuccess = true;
+
+                document.getElementById('js-shopping-cart-items').innerHTML = getCartTotalItems(this.cart).toString();
 
                 setTimeout(() => {
                     this.addToCartSuccess = false;
@@ -126,9 +125,6 @@ export default {
                 this.addToCartLoading = false;
                 console.error('Error adding to cart:', error);
             }
-
-            document.getElementById('js-shopping-cart-items')
-            .innerHTML = getCartTotalItems(this.cart).toString();
         },
 
         updateSelectedColor(colorIri) {
