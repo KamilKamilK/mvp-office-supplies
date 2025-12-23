@@ -24,7 +24,7 @@ import TitleComponent from '@/components/title.vue';
 import SearchBar from '@/components/search-bar.vue';
 
 export default {
-    name: 'Catalog',
+    name: 'CatalogList',
     components: { LegendComponent, ProductList, TitleComponent, SearchBar },
     props: {
         currentCategoryId: {
