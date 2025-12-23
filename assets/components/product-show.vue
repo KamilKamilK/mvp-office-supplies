@@ -42,15 +42,16 @@
 </template>
 <script>
 import { fetchOneProduct } from '@/services/products-service';
-import { fetchCart, addItemToCart, getCartTotalItems } from '@/services/cart-service';
 import formatPrice from '@/helpers/format-price';
 import ColorSelector from '@/components/color-selector.vue';
 import Loading from '@/components/loading.vue';
 import TitleComponent from '@/components/title.vue';
+import ShoppingCartMixin from '@/mixins/get-shopping-cart';
 
 export default {
     name: 'ProductShow',
     components: { Loading, TitleComponent, ColorSelector },
+    mixins: [ShoppingCartMixin],
     props: {
         productId: {
             type: String,
@@ -60,8 +61,6 @@ export default {
     data() {
         return {
             cart: null,
-            addToCartLoading: false,
-            addToCartSuccess: false,
             product: null,
             loading: true,
             quantity: 1,
@@ -81,10 +80,6 @@ export default {
     async created() {
         this.loading = true;
 
-        fetchCart().then(cart => {
-            this.cart = cart;
-        });
-
         try {
             this.product = (await fetchOneProduct(this.productId)).data;
         } finally {
@@ -92,39 +87,8 @@ export default {
         }
     },
     methods: {
-        async addToCart() {
-            if (!this.selectedColorId && this.product.colors.length > 0) {
-                console.warn('Please select a color before adding to cart.');
-                return;
-            }
-
-            this.addToCartLoading = true;
-            this.addToCartSuccess = false;
-
-            try {
-                const [result] = await Promise.all([
-                    addItemToCart(this.cart, {
-                        product: this.product['@id'],
-                        color: this.selectedColorId,
-                        quantity: this.quantity,
-                    }),
-                    // new Promise(resolve => setTimeout(resolve, 300)),
-                ]);
-
-                this.cart = result;
-
-                this.addToCartLoading = false;
-                this.addToCartSuccess = true;
-
-                document.getElementById('js-shopping-cart-items').innerHTML = getCartTotalItems(this.cart).toString();
-
-                setTimeout(() => {
-                    this.addToCartSuccess = false;
-                }, 2000);
-            } catch (error) {
-                this.addToCartLoading = false;
-                console.error('Error adding to cart:', error);
-            }
+        addToCard() {
+            this.addProductToCart(this.product, this.selectedColorId, this.quantity);
         },
 
         updateSelectedColor(colorIri) {
