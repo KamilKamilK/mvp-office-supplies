@@ -19,7 +19,7 @@
 
         <div class="col-3">${{ totalPrice }}</div>
         <div class="col-3">
-            <button class="btn btn-danger">Remove</button>
+            <button class="btn btn-danger" @click="$emit('removeFromCart')">Remove</button>
         </div>
     </div>
 </template>
@@ -35,7 +35,7 @@ export default {
             required: true,
         },
     },
-    emits: ['update-quantity'],
+    emits: ['update-quantity', 'removeFromCart'],
     computed: {
         hexColor() {
             return this.item.color ? this.item.color.hexColor : 'fff';

@@ -10,6 +10,7 @@
                         v-if="completeCart"
                         :items="completeCart.items"
                         @update-quantity="updateQuantity"
+                        @remove-from-cart="removeProductFromCart($event.productId, $event.colorId)"
                     />
                 </div>
             </div>
@@ -79,7 +80,6 @@ export default {
             });
         },
         updateQuantity({ productId, colorId, quantity }) {
-            console.log('page received update-quantity', { productId, colorId, quantity });
             updateCartItemQuantity(this.cart, productId, colorId, quantity);
         },
     },

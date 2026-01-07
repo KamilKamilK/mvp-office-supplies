@@ -15,6 +15,12 @@
             :key="item.id"
             :item="item"
             @update-quantity="$emit('updateQuantity', $event)"
+            @remove-from-cart="
+                $emit('removeFromCart', {
+                    productId: item.product['@id'],
+                    colorId: item.color ? item.color['@id'] : null,
+                })
+            "
         />
         <div class="p-3">
             Total: <strong>${{ totalPrice }}</strong>
@@ -34,7 +40,7 @@ export default {
             required: true,
         },
     },
-    emits: ['updateQuantity'],
+    emits: ['updateQuantity', 'removeFromCart'],
     computed: {
         totalPrice() {
             return formatPrice(this.items.reduce((acc, item) => acc + item.product.price * item.quantity, 0));

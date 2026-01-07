@@ -1,4 +1,4 @@
-import { fetchCart, addItemToCart, getCartTotalItems } from '@/services/cart-service';
+import { fetchCart, addItemToCart, getCartTotalItems, removeItemFromCart } from '@/services/cart-service';
 
 export default {
     data() {
@@ -33,7 +33,7 @@ export default {
                 this.addToCartLoading = false;
                 this.addToCartSuccess = true;
 
-                document.getElementById('js-shopping-cart-items').innerHTML = getCartTotalItems(this.cart).toString();
+                this.updateCartHeaderTotal();
 
                 setTimeout(() => {
                     this.addToCartSuccess = false;
@@ -42,6 +42,16 @@ export default {
                 this.addToCartLoading = false;
                 console.error('Error adding to cart:', error);
             }
+        },
+
+        async removeProductFromCart(productId, colorId) {
+            await removeItemFromCart(this.cart, productId, colorId);
+
+            this.updateCartHeaderTotal();
+        },
+
+        updateCartHeaderTotal() {
+            document.getElementById('js-shopping-cart-items').innerHTML = getCartTotalItems(this.cart).toString();
         },
     },
 };

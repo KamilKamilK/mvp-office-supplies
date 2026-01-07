@@ -104,7 +104,7 @@ export async function addItemToCart(cart, item) {
  * @return {Promise}
  */
 export async function removeItemFromCart(cart, productId, colorId) {
-    cart.items = cart.items.filter(item => !(item.product === productId && item.color === colorId));
+    cart.items = cart.items.filter(item => !(item.product === productId && (item.color || null) === colorId));
 
     const response = await axios.put(getCartIri(), cart, apiConfig);
 
