@@ -20,12 +20,12 @@
 <script>
 import Catalog from '@/components/catalog.vue';
 import Sidebar from '@/components/sidebar.vue';
-import ProductShow from '../components/product-show.vue';
+import ProductShow from '../components/product-show/index.vue';
 import { getCurrentCategoryId, getCurrentProductId } from '@/services/page-context';
 import { getCategories } from '@/services/categories-service';
 
 export default {
-    name: 'Products',
+    name: 'ShopProducts',
     components: {
         Catalog,
         Sidebar,

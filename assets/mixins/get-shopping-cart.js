@@ -15,6 +15,8 @@ export default {
 
     methods: {
         async addProductToCart(product, selectedColorId, quantity) {
+            console.log('product, selectedColorId, quantity:', product, selectedColorId, quantity);
+
             if (!selectedColorId && product.colors.length > 0) {
                 console.warn('Please select a color before adding to cart.');
                 return;

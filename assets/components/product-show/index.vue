@@ -19,21 +19,13 @@
                         Price: <strong>${{ price }}</strong>
                     </div>
                     <div class="col-8 p-3">
-                        <div class="d-flex align-items-center justify-content-center">
-                            <color-selector v-if="product.colors.length !== 0" @color-selected="updateSelectedColor" />
-                            <input v-model.number="quantity" class="form-control mx-3" type="number" min="1" />
-                            <button
-                                class="btn btn-info btn-sm"
-                                :disabled="cart === null || addToCartLoading"
-                                @click="addToCart"
-                            >
-                                <span v-show="!addToCartLoading && !addToCartSuccess">Add to Cart</span>
-                                <span v-show="addToCartLoading">
-                                    <i class="fas fa-spinner fa-spin"></i> Adding...
-                                </span>
-                                <span v-show="addToCartSuccess"> <i class="fas fa-check"></i> Added! </span>
-                            </button>
-                        </div>
+                        <product-cart-add-controls
+                            :product="product"
+                            :allow-add-to-cart="cart !== null"
+                            :add-to-cart-loading="addToCartLoading"
+                            :add-to-cart-success="addToCartSuccess"
+                            @add-to-cart="addToCart"
+                        />
                     </div>
                 </div>
             </div>
@@ -43,14 +35,14 @@
 <script>
 import { fetchOneProduct } from '@/services/products-service';
 import formatPrice from '@/helpers/format-price';
-import ColorSelector from '@/components/color-selector.vue';
 import Loading from '@/components/loading.vue';
 import TitleComponent from '@/components/title.vue';
 import ShoppingCartMixin from '@/mixins/get-shopping-cart';
+import ProductCartAddControls from '@/components/product-show/cart-add-controls.vue';
 
 export default {
     name: 'ProductShow',
-    components: { Loading, TitleComponent, ColorSelector },
+    components: { Loading, TitleComponent, ProductCartAddControls },
     mixins: [ShoppingCartMixin],
     props: {
         productId: {
@@ -63,8 +55,6 @@ export default {
             cart: null,
             product: null,
             loading: true,
-            quantity: 1,
-            selectedColorId: null,
         };
     },
     computed: {
@@ -87,12 +77,8 @@ export default {
         }
     },
     methods: {
-        addToCart() {
-            this.addProductToCart(this.product, this.selectedColorId, this.quantity);
-        },
-
-        updateSelectedColor(colorIri) {
-            this.selectedColorId = colorIri;
+        addToCart({ quantity, selectedColorId }) {
+            this.addProductToCart(this.product, selectedColorId, quantity);
         },
     },
 };
@@ -107,10 +93,6 @@ export default {
     img {
         max-width: 100%;
         max-height: 100%;
-    }
-
-    input {
-        width: 60px;
     }
 }
 </style>
