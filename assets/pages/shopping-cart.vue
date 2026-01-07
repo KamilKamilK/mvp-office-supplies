@@ -6,7 +6,11 @@
                 <title-component text="Shopping Cart" />
                 <div class="content p-3">
                     <loading v-show="completeCart === null" />
-                    <shopping-cart-list v-if="completeCart" :items="completeCart.items" />
+                    <shopping-cart-list
+                        v-if="completeCart"
+                        :items="completeCart.items"
+                        @update-quantity="updateQuantity"
+                    />
                 </div>
             </div>
         </div>
@@ -19,6 +23,7 @@ import Loading from '@/components/loading.vue';
 import ShoppingCartList from '@/components/shopping-cart/index.vue';
 import { fetchProductsById } from '@/services/products-service';
 import { fetchColors } from '@/services/colors-service';
+import { updateCartItemQuantity } from '@/services/cart-service';
 
 export default {
     name: 'ShoppingCart',
@@ -39,11 +44,17 @@ export default {
                 return null;
             }
 
-            const completeItems = this.cart.items.map(item => ({
-                product: this.products.find(p => p['@id'] === item.product),
-                color: this.colors.find(c => c['@id'] === item.color),
-                quantity: item.quantity,
-            }));
+            const completeItems = this.cart.items.map(cartItem => {
+                const product = this.products.find(productItem => productItem['@id'] === cartItem.product);
+                const color = this.colors.find(colorItem => colorItem['@id'] === cartItem.color) || null;
+
+                return {
+                    id: `${cartItem.product}_${cartItem.color ? cartItem.color : 'none'}`,
+                    product,
+                    color,
+                    quantity: cartItem.quantity,
+                };
+            });
 
             return {
                 items: completeItems,
@@ -66,6 +77,10 @@ export default {
             return fetchProductsById(productIds).then(productsPresponse => {
                 this.products = productsPresponse.data.member || productsPresponse.data['hydra:member'];
             });
+        },
+        updateQuantity({ productId, colorId, quantity }) {
+            console.log('page received update-quantity', { productId, colorId, quantity });
+            updateCartItemQuantity(this.cart, productId, colorId, quantity);
         },
     },
 };
