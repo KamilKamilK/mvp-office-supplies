@@ -5,7 +5,6 @@
     "devDependencies": {
         "@babel/core": "^7.28.5",
         "@babel/preset-env": "^7.28.5",
-        "@fortawesome/fontawesome-free": "^7.1.0",
         "@symfony/webpack-encore": "^5.2.0",
         "@vue/compiler-sfc": "^3.5.26",
         "babel-loader": "^10.0.0",
@@ -45,6 +44,7 @@
         "fix-all": "npm run format && npm run lint:fix"
     },
     "dependencies": {
+        "@fortawesome/fontawesome-free": "^7.1.0",
         "@popperjs/core": "^2.11.8",
         "axios": "^1.13.2",
         "vue": "^3.5.26"
