@@ -82,12 +82,24 @@ export default {
 
         try {
             this.product = (await fetchOneProduct(this.productId)).data;
+
+            console.log('Fetching product with ID:', this.product);
+
         } finally {
             this.loading = false;
         }
     },
     methods: {
-        addToCard() {
+        addToCart() {
+            console.log(
+                'Adding product to cart:',
+                this.product,
+                'Color ID:',
+                this.selectedColorId,
+                'Quantity:',
+                this.quantity
+            );
+
             this.addProductToCart(this.product, this.selectedColorId, this.quantity);
         },
 

@@ -33,6 +33,7 @@ Encore.setOutputPath('public/build/')
     })
     .enableVueLoader(() => {}, {
         version: 3,
+        runtimeCompilerBuild: false,
     })
     .configureDefinePlugin(definitions => {
         definitions.__VUE_OPTIONS_API__ = true;
