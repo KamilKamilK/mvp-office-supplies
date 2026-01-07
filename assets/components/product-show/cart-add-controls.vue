@@ -3,7 +3,9 @@
         <color-selector v-if="product.colors.length !== 0" @color-selected="updateSelectedColor" />
         <input v-model.number="quantity" class="form-control mx-3" type="number" min="1" />
         <button class="btn btn-info btn-sm" :disabled="!allowAddToCart || addToCartLoading" @click="addToCart">
-            <span v-show="!addToCartLoading && !addToCartSuccess">Add to Cart</span>
+            <span v-show="!addToCartLoading && !addToCartSuccess">
+                {{ addButtonText }}
+            </span>
             <span v-show="addToCartLoading"> <i class="fas fa-spinner fa-spin"></i> Adding... </span>
             <span v-show="addToCartSuccess"> <i class="fas fa-check"></i> Added! </span>
         </button>
@@ -32,6 +34,10 @@ export default {
         addToCartSuccess: {
             type: Boolean,
             required: true,
+        },
+        addButtonText: {
+            type: String,
+            default: 'Add to Cart',
         },
     },
     emits: ['add-to-cart'],

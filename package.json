@@ -41,7 +41,8 @@
         "build": "encore production --progress",
         "lint": "eslint assets",
         "lint:fix": "eslint assets --fix",
-        "format": "prettier --write \"assets/**/*.{js,vue,scss}\""
+        "format": "prettier --write \"assets/**/*.{js,vue,scss}\"",
+        "fix-all": "npm run format && npm run lint:fix"
     },
     "dependencies": {
         "@popperjs/core": "^2.11.8",
