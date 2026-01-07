@@ -3,7 +3,14 @@
         <div class="row">
             <!-- Sidebar Featured Product -->
             <div class="col-xs-12 col-lg-3 mb-3">
-                <shopping-cart-sidebar v-if="featuredProduct" :featured-product="featuredProduct" />
+                <shopping-cart-sidebar
+                    v-if="featuredProduct"
+                    :featured-product="featuredProduct"
+                    :allow-add-to-cart="cart !== null"
+                    :add-to-cart-loading="addToCartLoading"
+                    :add-to-cart-success="addToCartSuccess"
+                    @add-to-cart="addProductToCart(featuredProduct, $event.selectedColorId, $event.quantity)"
+                />
             </div>
 
             <!-- Lista koszyka -->

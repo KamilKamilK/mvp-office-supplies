@@ -9,10 +9,11 @@
 
             <cart-add-controls
                 :product="featuredProduct"
-                :add-to-cart-loading="false"
-                :add-to-cart-success="false"
-                :allow-add-to-cart="false"
-                add-button-text="View Product"
+                :add-to-cart-loading="addToCartLoading"
+                :add-to-cart-success="addToCartSuccess"
+                :allow-add-to-cart="allowAddToCart"
+                add-button-text="+ Add to Cart"
+                @add-to-cart="$emit('add-to-cart', $event)"
             />
         </div>
     </div>
@@ -27,7 +28,20 @@ export default {
     components: { CartAddControls },
     props: {
         featuredProduct: { type: Object, required: true },
+        allowAddToCart: {
+            type: Boolean,
+            required: true,
+        },
+        addToCartLoading: {
+            type: Boolean,
+            required: true,
+        },
+        addToCartSuccess: {
+            type: Boolean,
+            required: true,
+        },
     },
+    emits: ['add-to-cart'],
     computed: {
         price() {
             return formatPrice(this.featuredProduct.price);
