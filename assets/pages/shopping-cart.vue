@@ -71,11 +71,11 @@ export default {
                 };
             });
 
-            return { items: completeItems };
+            return { items: completeItems.filter(item => item.product) };
         },
     },
     watch: {
-        async cart() {
+        'cart.items.length': function watchCartItemsLength() {
             this.loadProducts();
         },
     },

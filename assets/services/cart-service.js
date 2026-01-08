@@ -43,7 +43,16 @@ function setCartIri(cartIri) {
  * @param {string} colorId
  */
 function findItemIndex(cart, productId, colorId) {
-    return cart.items.findIndex(cartItem => cartItem.product === productId && cartItem.color === colorId);
+    const normalizedColorId = colorId || null;
+
+    const items = Array.isArray(cart.items) ? cart.items : [...cart.items];
+
+    return items.findIndex(cartItem => {
+        const itemColorId = cartItem.color || null;
+        const itemProduct = cartItem.product;
+
+        return itemProduct === productId && itemColorId === normalizedColorId;
+    });
 }
 
 /**
