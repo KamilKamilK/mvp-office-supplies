@@ -1,7 +1,7 @@
 @use './variables/colors' as colors;
 @use './components/black-component' as black;
 @use 'components/light-component' as light;
-@use 'bootstrap' as *;
+@use "bootstrap/scss/bootstrap";
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap');
 
 body {
