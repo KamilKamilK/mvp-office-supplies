@@ -15,17 +15,23 @@
 
             <!-- Lista koszyka -->
             <div class="col-xs-12 col-lg-9">
-                <title-component :text="pageTitle" />
+                <transition name="fade" mode="out-in">
+                    <title-component :key="currentState" :text="pageTitle" />
+                </transition>
                 <div class="content p-3">
                     <loading v-show="completeCart === null" />
-                    <shopping-cart-list
-                        v-if="completeCart && currentState === 'cart'"
-                        :items="completeCart.items"
-                        @update-quantity="updateQuantity"
-                        @remove-from-cart="removeProductFromCart($event.productId, $event.colorId)"
-                    />
-
-                    <checkoput-page v-if="currentState === 'checkout'" />
+                    <transition name="fade" mode="out-in">
+                        <div v-if="completeCart && currentState === 'cart'">
+                            <shopping-cart-list
+                                :items="completeCart.items"
+                                @update-quantity="updateQuantity"
+                                @remove-from-cart="removeProductFromCart($event.productId, $event.colorId)"
+                            />
+                        </div>
+                        <div v-else-if="currentState === 'checkout'">
+                            <checkout-page />
+                        </div>
+                    </transition>
 
                     <div v-if="completeCart && completeCart.items.length > 0">
                         <button class="btn btn-primary mt-3" @click="switchState">{{ buttonText }}</button>
@@ -42,7 +48,7 @@ import ShoppingCartMixin from '@/mixins/get-shopping-cart';
 import Loading from '@/components/loading.vue';
 import ShoppingCartList from '@/components/shopping-cart/index.vue';
 import ShoppingCartSidebar from '@/components/shopping-cart/cart-sidebar.vue';
-import CheckoputPage from '@/components/checkout/index.vue';
+import CheckoutPage from '@/components/checkout/index.vue';
 import { fetchProductsById, fetchFeaturedProducts } from '@/services/products-service';
 import { fetchColors } from '@/services/colors-service';
 import { updateCartItemQuantity } from '@/services/cart-service';
@@ -50,7 +56,7 @@ import { updateCartItemQuantity } from '@/services/cart-service';
 export default {
     name: 'ShoppingCart',
     components: {
-        CheckoputPage,
+        CheckoutPage,
         Loading,
         ShoppingCartList,
         ShoppingCartSidebar,
@@ -128,6 +134,21 @@ export default {
 .component :global {
     .content {
         @include lc.light-component;
+    }
+
+    .fade-enter-active,
+    .fade-leave-active {
+        transition: opacity 1s ease-in-out;
+    }
+
+    .fade-enter-from,
+    .fade-leave-to {
+        opacity: 0;
+    }
+
+    .fade-enter-to,
+    .fade-leave-from {
+        opacity: 1;
     }
 }
 </style>
