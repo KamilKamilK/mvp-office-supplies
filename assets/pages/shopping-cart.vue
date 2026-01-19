@@ -28,9 +28,8 @@
                                 @remove-from-cart="removeProductFromCart($event.productId, $event.colorId)"
                             />
                         </div>
-                        <div v-else-if="currentState === 'checkout'">
-                            <checkout-page />
-                        </div>
+
+                        <checkout-page v-else-if="currentState === 'checkout'" :cart="cart" />
                     </transition>
 
                     <div v-if="completeCart && completeCart.items.length > 0">

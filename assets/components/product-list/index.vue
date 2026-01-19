@@ -21,6 +21,7 @@
 <script>
 import Loading from '@/components/loading.vue';
 import ProductCard from '@/components/product-list/product-card.vue';
+
 export default {
     name: 'ProductList',
     components: {

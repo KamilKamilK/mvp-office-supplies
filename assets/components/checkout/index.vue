@@ -1,7 +1,7 @@
 <template>
     <div class="row p-3">
         <div class="col-12">
-            <form novalidate>
+            <form novalidate @submit.prevent="submitOrder">
                 <div class="form-row d-flex gap-3 flex-wrap">
                     <form-input
                         v-model="form.customerName"
@@ -30,6 +30,13 @@
                         class="col"
                     />
                 </div>
+
+                <div class="form-row justify-content-end align-items-center mt-3">
+                    <loading v-if="loading" />
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-info btn-lg">Submit Order</button>
+                    </div>
+                </div>
             </form>
         </div>
     </div>
@@ -37,11 +44,20 @@
 
 <script>
 import FormInput from './form-input.vue';
+import Loading from '@/components/loading.vue';
+import { createOrder } from '@/services/checkout-service';
 
 export default {
     name: 'CheckoutPage',
     components: {
         FormInput,
+        Loading,
+    },
+    props: {
+        cart: {
+            type: Object,
+            required: true,
+        },
     },
     data() {
         return {
@@ -54,6 +70,7 @@ export default {
                 customerPhone: '',
             },
             validationErrors: {},
+            loading: false,
         };
     },
     methods: {
@@ -64,6 +81,21 @@ export default {
                 modelValue: this.form[id],
                 errorMessage: this.validationErrors[id] || '',
             };
+        },
+        async submitOrder() {
+            this.loading = true;
+            try {
+                const response = await createOrder({
+                    ...this.form,
+                    purchaseItems: this.cart.items,
+                });
+                alert('Order submitted successfully!');
+                console.log('Order response:', response.data);
+            } catch (error) {
+                console.error('Error submitting order:', error.response || error);
+            } finally {
+                this.loading = false;
+            }
         },
     },
 };
