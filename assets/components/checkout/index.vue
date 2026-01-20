@@ -10,27 +10,40 @@
                         v-model="form.customerName"
                         v-bind="getFieldProps('customerName', 'Name:')"
                         class="col"
+                        @blur="validateField"
                     />
                     <form-input
                         v-model="form.customerEmail"
                         type="email"
                         v-bind="getFieldProps('customerEmail', 'Email:')"
                         class="col"
+                        @blur="validateField"
                     />
                 </div>
-                <form-input v-model="form.customerAddress" v-bind="getFieldProps('customerAddress', 'Address')" />
+                <form-input
+                    v-model="form.customerAddress"
+                    v-bind="getFieldProps('customerAddress', 'Address')"
+                    @blur="validateField"
+                />
                 <div class="form-row d-flex gap-3 flex-wrap">
-                    <form-input v-model="form.customerZip" v-bind="getFieldProps('customerZip', 'Zip')" class="col" />
+                    <form-input
+                        v-model="form.customerZip"
+                        v-bind="getFieldProps('customerZip', 'Zip')"
+                        class="col"
+                        @blur="validateField"
+                    />
                     <form-input
                         v-model="form.customerCity"
                         v-bind="getFieldProps('customerCity', 'City')"
                         class="col"
+                        @blur="validateField"
                     />
                     <form-input
                         v-model="form.customerPhone"
                         type="phone"
                         v-bind="getFieldProps('customerPhone', 'Phone')"
                         class="col"
+                        @blur="validateField"
                     />
                 </div>
 
@@ -73,7 +86,7 @@ export default {
                 customerCity: '',
                 customerPhone: '',
             },
-            validationErrors: {},
+            validationErrors: this.getEmptyValidationErrors(),
             loading: false,
             serverError: false,
         };
@@ -104,7 +117,7 @@ export default {
         async submitOrder() {
             this.loading = true;
             this.serverError = false;
-            this.validationErrors = {};
+            this.validationErrors = this.getEmptyValidationErrors();
 
             try {
                 const purchaseItems = this.preparePurchaseItems();
@@ -116,7 +129,6 @@ export default {
 
                 await clearCart();
 
-                // console.log('Order submitted successfully:', response);
                 window.location.href = `/confirmation/${response.data.id}`;
             } catch (error) {
                 console.error('Order submission error:', error);
@@ -138,6 +150,32 @@ export default {
             } finally {
                 this.loading = false;
             }
+        },
+        validateField(event) {
+            const validationMessages = {
+                customerName: 'Please, enter your full name!',
+                customerEmail: 'Please, enter your email address!',
+                customerAddress: 'Please, enter your street address!',
+                customerZip: 'Please, enter your ZIP code!',
+                customerCity: 'Please, enter your city!',
+                customerPhone: 'Please, provide a phone number!',
+            };
+            const validationField = event.target.id;
+            if (!this.form[validationField]) {
+                this.validationErrors[validationField] = validationMessages[validationField];
+            } else {
+                delete this.validationErrors[validationField];
+            }
+        },
+        getEmptyValidationErrors() {
+            return {
+                customerName: null,
+                customerEmail: null,
+                customerAddress: null,
+                customerZip: null,
+                customerCity: null,
+                customerPhone: null,
+            };
         },
     },
 };

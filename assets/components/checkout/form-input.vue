@@ -11,6 +11,7 @@
             :class="{ 'is-invalid': !isValid }"
             placeholder="type here..."
             @input="$emit('update:modelValue', $event.target.value)"
+            @blur="$emit('blur', $event)"
         />
 
         <div v-if="!isValid" class="invalid-feedback">
@@ -44,7 +45,7 @@ export default {
             default: '',
         },
     },
-    emits: ['input', 'update:modelValue'],
+    emits: ['input', 'update:modelValue', 'blur'],
     computed: {
         isValid() {
             return !this.errorMessage;
