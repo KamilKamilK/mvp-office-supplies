@@ -2,6 +2,9 @@
     <div class="row p-3">
         <div class="col-12">
             <form novalidate @submit.prevent="submitOrder">
+                <div v-show="serverError" class="alert alert-danger">
+                    DANGER DANGER - There was an error processing your order. Please try again later.
+                </div>
                 <div class="form-row d-flex gap-3 flex-wrap">
                     <form-input
                         v-model="form.customerName"
@@ -34,7 +37,7 @@
                 <div class="form-row justify-content-end align-items-center mt-3">
                     <loading v-if="loading" />
                     <div class="col-auto">
-                        <button type="submit" class="btn btn-info btn-lg">Submit Order</button>
+                        <button type="submit" class="btn btn-info btn-lg" :disabled="loading">Submit Order</button>
                     </div>
                 </div>
             </form>
@@ -46,6 +49,7 @@
 import FormInput from './form-input.vue';
 import Loading from '@/components/loading.vue';
 import { createOrder } from '@/services/checkout-service';
+import { clearCart } from '@/services/cart-service';
 
 export default {
     name: 'CheckoutPage',
@@ -71,6 +75,7 @@ export default {
             },
             validationErrors: {},
             loading: false,
+            serverError: false,
         };
     },
     methods: {
@@ -82,17 +87,54 @@ export default {
                 errorMessage: this.validationErrors[id] || '',
             };
         },
+        preparePurchaseItems() {
+            return this.cart.items.map(cartItem => {
+                const item = {
+                    product: cartItem.product,
+                    quantity: cartItem.quantity,
+                };
+
+                if (cartItem.color) {
+                    item.color = cartItem.color;
+                }
+
+                return item;
+            });
+        },
         async submitOrder() {
             this.loading = true;
+            this.serverError = false;
+            this.validationErrors = {};
+
             try {
+                const purchaseItems = this.preparePurchaseItems();
+
                 const response = await createOrder({
                     ...this.form,
-                    purchaseItems: this.cart.items,
+                    purchaseItems,
                 });
-                alert('Order submitted successfully!');
-                console.log('Order response:', response.data);
+
+                await clearCart();
+
+                // console.log('Order submitted successfully:', response);
+                window.location.href = `/confirmation/${response.data.id}`;
             } catch (error) {
-                console.error('Error submitting order:', error.response || error);
+                console.error('Order submission error:', error);
+
+                if (!error.response) {
+                    this.serverError = true;
+                    return;
+                }
+
+                const { response } = error;
+
+                if (response.status === 422 && response.data?.violations) {
+                    response.data.violations.forEach(violation => {
+                        this.validationErrors[violation.propertyPath] = violation.message;
+                    });
+                } else {
+                    this.serverError = true;
+                }
             } finally {
                 this.loading = false;
             }

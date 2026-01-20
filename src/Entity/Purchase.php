@@ -68,6 +68,7 @@ class Purchase
         $this->purchaseItems = new ArrayCollection();
     }
 
+    #[Groups(["purchase:read"])]
     public function getId(): ?int
     {
         return $this->id;
